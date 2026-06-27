@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내 고민을 프롬프트로 — 특수교사 AI 워크숍 워크시트</title>
+<style>
+  :root{
+    --bg:#F4F7F5;
+    --card:#FFFFFF;
+    --ink:#23262A;
+    --ink-soft:#8C9196;
+    --line:#EBEEF0;
+    --green:#34CE7E;
+    --green-deep:#13A05D;
+    --mint:#C9F4DB;
+    --mint-soft:#E9FBF1;
+    --dark:#26282C;
+    --dark-line:#3B3E44;
+    --dark-text:#EDEFF1;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',system-ui,-apple-system,sans-serif;
+    line-height:1.65;font-size:16.5px;-webkit-font-smoothing:antialiased;
+    padding:0 0 72px;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px;}
+
+  /* highlighter marker — 시그니처 */
+  .mark{background:linear-gradient(transparent 52%, var(--mint) 52%);padding:0 2px;}
+
+  /* lowercase english eyebrow */
+  .eyebrow{
+    font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:lowercase;
+    color:var(--ink);margin-bottom:14px;
+  }
+  .eyebrow.green{color:var(--green-deep);}
+  .eyebrow .n{color:var(--green-deep);}
+
+  /* ---------- hero ---------- */
+  .hero{text-align:center;padding:54px 0 30px;}
+  .hero .eyebrow{margin-bottom:20px;}
+  .hero-emojis{display:flex;gap:15px;justify-content:center;margin:0 0 26px;}
+  .ecard{
+    width:60px;height:60px;border-radius:18px;background:#fff;display:grid;place-items:center;
+    font-size:29px;box-shadow:0 12px 26px rgba(30,45,38,.10);
+  }
+  .ecard.r1{transform:rotate(-7deg);}
+  .ecard.r2{transform:translateY(-7px);}
+  .ecard.r3{transform:rotate(7deg);}
+  h1{font-size:33px;line-height:1.28;margin:0 0 16px;font-weight:800;letter-spacing:-.02em;}
+  .lead{font-size:16px;color:#55595E;margin:0 auto;max-width:30em;word-break:keep-all;}
+  .lead b{color:var(--ink);font-weight:700;}
+
+  .savebar{
+    display:flex;align-items:center;gap:9px;margin:26px auto 0;max-width:520px;
+    font-size:13px;color:var(--ink-soft);
+  }
+  .progress{flex:1;height:6px;border-radius:99px;background:#E4E9E6;overflow:hidden;}
+  .progress > i{display:block;height:100%;width:0;background:var(--green);
+    border-radius:99px;transition:width .35s ease;}
+  .savebar .saved{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+  .savebar .dot{width:7px;height:7px;border-radius:50%;background:var(--green);
+    opacity:0;transition:opacity .25s;}
+  .savebar.show .dot{opacity:1;}
+  .reset{
+    border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+    font:inherit;font-size:12.5px;padding:6px 12px;border-radius:99px;cursor:pointer;white-space:nowrap;
+  }
+  .reset:hover{border-color:var(--green);color:var(--green-deep);}
+
+  /* ---------- card ---------- */
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:22px;
+    padding:26px 26px 28px;margin:18px 0;box-shadow:0 6px 22px rgba(30,45,38,.04);
+  }
+  .card > .eyebrow{display:flex;align-items:baseline;gap:9px;}
+  .card h2{font-size:21px;margin:0 0 4px;font-weight:800;letter-spacing:-.01em;}
+  .card .desc{margin:0 0 18px;font-size:14px;color:var(--ink-soft);}
+
+  .field{margin-top:18px;}
+  .field:first-of-type{margin-top:0;}
+  label{display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+    font-size:14.5px;font-weight:700;margin-bottom:9px;}
+  .maps{
+    font-size:11.5px;font-weight:800;color:var(--green-deep);background:var(--mint-soft);
+    padding:3px 9px;border-radius:99px;letter-spacing:.01em;
+  }
+  .opt{font-size:12px;font-weight:600;color:var(--ink-soft);}
+  textarea,input[type=text]{
+    width:100%;font:inherit;color:var(--ink);background:#FBFDFC;
+    border:1.5px solid var(--line);border-radius:13px;padding:12px 14px;resize:vertical;
+  }
+  textarea{min-height:80px;}
+  textarea::placeholder,input::placeholder{color:#B4B9BD;}
+  textarea:focus,input:focus{outline:none;border-color:var(--green);background:#fff;
+    box-shadow:0 0 0 3px rgba(52,206,126,.16);}
+
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:9px;}
+  .chip{
+    font:inherit;font-size:14.5px;font-weight:600;cursor:pointer;
+    border:1.5px solid var(--line);background:#fff;color:#5A5E63;
+    padding:9px 18px;border-radius:99px;transition:.12s;
+  }
+  .chip:hover{border-color:var(--green);color:var(--green-deep);}
+  .chip.on{background:var(--green);border-color:var(--green);color:#fff;
+    box-shadow:0 4px 12px rgba(52,206,126,.30);}
+
+  /* ---------- generate ---------- */
+  .go{
+    width:100%;font:inherit;font-size:18px;font-weight:800;cursor:pointer;
+    background:var(--dark);color:#fff;border:none;border-radius:16px;padding:18px;
+    margin-top:8px;transition:.15s;letter-spacing:.01em;
+  }
+  .go:hover{background:#16181B;transform:translateY(-1px);
+    box-shadow:0 10px 26px rgba(38,40,44,.22);}
+  .go:active{transform:translateY(0);}
+  .go .arrow{color:var(--green);}
+
+  /* ---------- result (dark pill panel) ---------- */
+  .result{margin-top:18px;display:none;}
+  .result.show{display:block;animation:rise .4s ease both;}
+  @keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+  .panel{background:var(--dark);border-radius:22px;padding:24px 24px 26px;color:var(--dark-text);}
+  .panel .eyebrow{color:#fff;margin-bottom:6px;}
+  .panel .eyebrow .n{color:var(--green);}
+  .panel h2{font-size:19px;margin:0 0 16px;font-weight:800;color:#fff;}
+  pre{
+    margin:0;white-space:pre-wrap;word-break:break-word;font-family:inherit;
+    font-size:15.5px;line-height:1.75;color:var(--dark-text);
+  }
+  pre .k{color:var(--green);font-weight:800;}
+  .panel-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;}
+  .btn{
+    font:inherit;font-size:14.5px;font-weight:700;cursor:pointer;border-radius:12px;
+    padding:11px 17px;text-decoration:none;display:inline-flex;align-items:center;gap:7px;
+    border:1.5px solid transparent;
+  }
+  .btn.copy{background:#fff;color:var(--dark);}
+  .btn.copy:hover{background:#EBEDEF;}
+  .btn.copy.done{background:var(--green);color:#0C3D24;}
+  .btn.link{background:transparent;color:var(--dark-text);border-color:var(--dark-line);}
+  .btn.link:hover{border-color:#fff;}
+  .hint{margin-top:16px;font-size:14px;color:#5A5E63;}
+  .hint b{color:var(--ink);font-weight:700;}
+
+  footer{margin-top:34px;text-align:center;font-size:12.5px;color:#A7ACB0;}
+  footer .copy-line{display:inline-block;margin-top:7px;color:#BBC0C4;letter-spacing:.01em;line-height:1.7;}
+  footer .copy-line a{color:var(--green-deep);text-decoration:none;font-weight:600;}
+  footer .copy-line a:hover{text-decoration:underline;}
+
+  @media (max-width:520px){
+    body{font-size:16px;}
+    h1{font-size:27px;}
+    .card{padding:22px 18px 24px;border-radius:18px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="eyebrow">worksheet</div>
+    <div class="hero-emojis" aria-hidden="true">
+      <span class="ecard r1">💭</span>
+      <span class="ecard r2">📝</span>
+      <span class="ecard r3">✨</span>
+    </div>
+    <h1>내 고민을 <span class="mark">프롬프트</span>로 옮기기</h1>
+    <p class="lead">프롬프트는 새로 짜는 게 아니에요.<br>빈칸에 <span class="mark"><b>내 고민을 적기만</b></span> 하면,<br>그게 그대로 프롬프트가 됩니다.</p>
+    <div class="savebar" id="savebar">
+      <span class="progress"><i id="progFill"></i></span>
+      <span class="saved"><span class="dot"></span><span id="saveText">자동 저장돼요</span></span>
+      <button class="reset" id="resetBtn" type="button">전체 지우기</button>
+    </div>
+  </section>
+
+  <!-- persona (선택) -->
+  <section class="card">
+    <div class="eyebrow green">persona <span class="opt">· 선택</span></div>
+    <div class="field">
+      <label>AI를 어떤 사람이라고 가정할까요? <span class="maps">→ 역할</span></label>
+      <input type="text" id="role" placeholder="예) 초등학교 특수학급에서 근무하는 10년차 특수교사">
+    </div>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="card">
+    <div class="eyebrow"><span class="n">step 01</span> · problem</div>
+    <h2>내가 겪고 있는 문제</h2>
+    <p class="desc">지금 나를 막막하게 하는 일 하나를 떠올려 보세요.</p>
+
+    <div class="field">
+      <label>업무 / 수업 중 어느 쪽인가요?</label>
+      <div class="chips" id="kindChips" data-key="kind">
+        <button type="button" class="chip" data-val="수업">수업</button>
+        <button type="button" class="chip" data-val="업무">업무</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>어떤 점이 힘든가요? <span class="maps">→ 맥락</span></label>
+      <textarea id="problem" placeholder="예) 쉬는 시간에 또래에게 먼저 다가가지 못하는 학생이 있다. 매번 따로 지도하기가 어렵다."></textarea>
+    </div>
+    <div class="field">
+      <label>그래서 무엇을 만들까요? <span class="maps">→ 목표</span></label>
+      <textarea id="goal" placeholder="예) 또래에게 인사·요청하는 말을 연습하는 활동 / IEP 목표 초안 / 안내 가정통신문"></textarea>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="card">
+    <div class="eyebrow"><span class="n">step 02</span> · user</div>
+    <h2>누구를 위해 만드나요?</h2>
+    <p class="desc">읽거나 사용할 사람을 정하면, 결과물이 그 사람에게 맞춰집니다.</p>
+
+    <div class="field">
+      <label>대상</label>
+      <div class="chips" id="whoChips" data-key="who">
+        <button type="button" class="chip" data-val="학생">학생</button>
+        <button type="button" class="chip" data-val="나 자신">나 자신</button>
+        <button type="button" class="chip" data-val="보호자">보호자</button>
+        <button type="button" class="chip" data-val="동료 교사">동료 교사</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>그 사람은 어떤 사람인가요? <span class="maps">→ 맥락</span></label>
+      <textarea id="whoDesc" placeholder="예) 3학년 자폐성장애 학생. 1~2단어로 의사를 표현함. 글보다 그림·소리에 잘 반응함."></textarea>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="card">
+    <div class="eyebrow"><span class="n">step 03</span> · result</div>
+    <h2>어떤 결과물이면 좋을까요?</h2>
+    <p class="desc"><span class="mark">'잘 나왔다'</span>를 미리 정해두면, AI도 그 방향으로 만들어 줍니다.</p>
+
+    <div class="field">
+      <label>어떤 형태였으면 하나요? <span class="maps">→ 출력형식</span></label>
+      <textarea id="form" placeholder="예) 태블릿에서 쓰는 단일 HTML 웹앱 / 표 / 번호 매긴 목록 / 가정통신문 형식"></textarea>
+    </div>
+    <div class="field">
+      <label>'잘 나왔다'의 기준은? <span class="maps">→ 제약사항</span></label>
+      <textarea id="crit" placeholder="예) 쉬운 말로. 버튼이 크게. 한국어 음성(TTS) 포함. 전문용어 빼고. A4 한 장 안에."></textarea>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <button class="go" id="goBtn" type="button">프롬프트로 옮기기 <span class="arrow">↓</span></button>
+
+  <!-- RESULT -->
+  <div class="result" id="result">
+    <div class="panel">
+      <div class="eyebrow"><span class="n">step 04</span> · your prompt</div>
+      <h2>완성된 프롬프트</h2>
+      <pre id="out"></pre>
+      <div class="panel-actions">
+        <button class="btn copy" id="copyBtn" type="button">프롬프트 복사</button>
+        <a class="btn link" href="https://claude.ai/new" target="_blank" rel="noopener">Claude 열기</a>
+        <a class="btn link" href="https://gemini.google.com/app" target="_blank" rel="noopener">Gemini 열기</a>
+        <a class="btn link" href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT 열기</a>
+      </div>
+    </div>
+    <p class="hint">붙여넣고 결과가 별로면 그대로 끝내지 마세요. <b>"글씨를 더 키워줘", "버튼을 아래로", "효과음을 넣어줘"</b>처럼 불만을 다시 말해 고쳐 나가면 됩니다. 고치는 것도 다 프롬프트예요.</p>
+  </div>
+
+  <footer>입력 내용은 이 기기 브라우저에만 저장됩니다 · 학생 실명·사진은 넣지 마세요<br><span class="copy-line">© 2026 엄지안 · All rights reserved.<br>특수교사를 위한 AI 도구 활용 워크숍</span></footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "sped_ai_worksheet_v2";
+  var textIds = ["role","problem","goal","whoDesc","form","crit"];
+  var chipState = {kind:"", who:""};
+
+  var saveTimer = null;
+  var savebar = document.getElementById("savebar");
+  var saveText = document.getElementById("saveText");
+  var progFill = document.getElementById("progFill");
+
+  function collect(){
+    var d = {chips:{kind:chipState.kind, who:chipState.who}};
+    textIds.forEach(function(id){ d[id] = document.getElementById(id).value; });
+    return d;
+  }
+  function updateProgress(){
+    if(!progFill) return;
+    var total = textIds.length + 2, done = 0;
+    textIds.forEach(function(id){ if(document.getElementById(id).value.trim()) done++; });
+    if(chipState.kind) done++;
+    if(chipState.who) done++;
+    progFill.style.width = Math.round(done/total*100) + "%";
+  }
+  function flashSaved(){
+    savebar.classList.add("show");
+    saveText.textContent = "저장됨";
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function(){
+      saveText.textContent = "자동 저장돼요";
+      savebar.classList.remove("show");
+    }, 1400);
+  }
+  function save(){
+    try{ localStorage.setItem(KEY, JSON.stringify(collect())); flashSaved(); }catch(e){}
+    updateProgress();
+  }
+  function load(){
+    var raw;
+    try{ raw = localStorage.getItem(KEY); }catch(e){ updateProgress(); return; }
+    if(raw){
+      var d;
+      try{ d = JSON.parse(raw); }catch(e){ d = null; }
+      if(d){
+        textIds.forEach(function(id){ if(typeof d[id]==="string") document.getElementById(id).value = d[id]; });
+        if(d.chips){
+          if(d.chips.kind){ chipState.kind = d.chips.kind; markChip("kindChips", d.chips.kind); }
+          if(d.chips.who){ chipState.who = d.chips.who; markChip("whoChips", d.chips.who); }
+        }
+      }
+    }
+    updateProgress();
+  }
+  function markChip(groupId, val){
+    var g = document.getElementById(groupId);
+    [].forEach.call(g.querySelectorAll(".chip"), function(c){
+      c.classList.toggle("on", c.getAttribute("data-val")===val);
+    });
+  }
+
+  textIds.forEach(function(id){
+    document.getElementById(id).addEventListener("input", save);
+  });
+  ["kindChips","whoChips"].forEach(function(groupId){
+    var g = document.getElementById(groupId);
+    var keyName = g.getAttribute("data-key");
+    g.addEventListener("click", function(e){
+      var btn = e.target.closest(".chip");
+      if(!btn) return;
+      var val = btn.getAttribute("data-val");
+      if(chipState[keyName]===val){ chipState[keyName]=""; }
+      else { chipState[keyName]=val; }
+      markChip(groupId, chipState[keyName]);
+      save();
+    });
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    if(!confirm("작성한 내용을 모두 지울까요? 되돌릴 수 없어요.")) return;
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    textIds.forEach(function(id){ document.getElementById(id).value=""; });
+    chipState.kind=""; chipState.who="";
+    markChip("kindChips",""); markChip("whoChips","");
+    document.getElementById("result").classList.remove("show");
+    updateProgress();
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+
+  function t(id){ return document.getElementById(id).value.trim(); }
+
+  function buildPrompt(){
+    var role=t("role"), problem=t("problem"), goal=t("goal"),
+        whoDesc=t("whoDesc"), form=t("form"), crit=t("crit");
+    var kind=chipState.kind, who=chipState.who;
+    var blocks=[];
+    if(role) blocks.push("[역할] " + role);
+    var ctx=[], whoLine="";
+    if(who && whoDesc) whoLine = who + " — " + whoDesc;
+    else if(who) whoLine = who;
+    else if(whoDesc) whoLine = whoDesc;
+    if(whoLine) ctx.push(whoLine);
+    if(problem) ctx.push((kind ? "("+kind+") " : "") + problem);
+    if(ctx.length) blocks.push("[맥락]\n" + ctx.join("\n"));
+    if(goal) blocks.push("[목표]\n" + goal);
+    if(crit) blocks.push("[제약사항]\n" + crit);
+    if(form) blocks.push("[출력형식]\n" + form);
+    return blocks.join("\n\n");
+  }
+  function render(text){
+    var esc = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    return esc.replace(/^\[(역할|맥락|목표|제약사항|출력형식)\]/gm, '<span class="k">[$1]</span>');
+  }
+
+  var lastPrompt="";
+  document.getElementById("goBtn").addEventListener("click", function(){
+    var p = buildPrompt();
+    if(!p){ alert("아직 빈칸이에요. 위 칸을 한 군데라도 채우고 다시 눌러 주세요."); return; }
+    lastPrompt = p;
+    document.getElementById("out").innerHTML = render(p);
+    var r = document.getElementById("result");
+    r.classList.add("show");
+    var cb=document.getElementById("copyBtn");
+    cb.classList.remove("done"); cb.textContent="프롬프트 복사";
+    r.scrollIntoView({behavior:"smooth", block:"start"});
+  });
+
+  document.getElementById("copyBtn").addEventListener("click", function(){
+    var btn=this;
+    function ok(){ btn.classList.add("done"); btn.textContent="복사됐어요!";
+      setTimeout(function(){ btn.classList.remove("done"); btn.textContent="프롬프트 복사"; },1600); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(lastPrompt).then(ok, fallbackCopy);
+    } else { fallbackCopy(); }
+    function fallbackCopy(){
+      var ta=document.createElement("textarea");
+      ta.value=lastPrompt; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try{ document.execCommand("copy"); ok(); }catch(e){ alert("복사가 안 되면 길게 눌러 직접 복사해 주세요."); }
+      document.body.removeChild(ta);
+    }
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
